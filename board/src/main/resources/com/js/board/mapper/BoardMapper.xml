@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.js.board.mapper.BoardMapper">
+	<!-- 목록 카운트 -->
+	<select id="getTotalRowCount" parameterType="com.js.board.dto.BoardDTO" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOARD_TABLE 
+		WHERE 
+			DELETE_STATUS = 'N'
+		<if test='title_keyword != null and title_keyword != ""'>
+			AND BOARD_TITLE LIKE CONCAT('%', #{title_keyword}, '%')<!-- mariaDB는 문자열 합칠 때 concat만 사용 -->
+		</if>
+		<if test='wirter_keyword != null and wirter_keyword != ""'>
+			AND BOARD_WRITER LIKE CONCAT('%', #{wirter_keyword}, '%')
+		</if>
+	</select>
+	
+	<!-- 조회 -->
+	<select id="getList" resultType="com.js.board.dto.BoardDTO"
+		parameterType="com.js.board.dto.BoardDTO">
+		SELECT 
+			BOARD_NUM
+			, BOARD_TITLE
+			, BOARD_CONTENT
+			, BOARD_WRITER
+			, BOARD_DATE
+			, DELETE_STATUS
+			, VIEW_COUNT
+			, DATEDIFF(NOW(), board_date) as DIFF_DATE
+		FROM 
+			board_table 
+		WHERE 
+			delete_status = 'N'
+		<if test='title_keyword != null and title_keyword != ""'> 
+			AND BOARD_TITLE LIKE CONCAT('%', #{title_keyword}, '%')<!-- mariaDB는 문자열 합칠 때 concat만 사용 -->
+		</if>
+		<if test='wirter_keyword != null and wirter_keyword != ""'>
+			AND BOARD_WRITER LIKE CONCAT('%', #{wirter_keyword}, '%')
+		</if>
+		ORDER BY
+			BOARD_DATE DESC
+		LIMIT #{firstRow}, #{rowSizePerPage}
+	</select>
+	
+	<!-- 추가 -->
+	<insert id="postList" parameterType="com.js.board.dto.BoardDTO">
+		INSERT INTO BOARD_TABLE (
+			BOARD_TITLE
+			, BOARD_CONTENT
+			, BOARD_WRITER
+			, BOARD_DATE
+			, DELETE_STATUS
+			, VIEW_COUNT
+		)
+		VALUES (
+			#{board_title}
+			, #{board_content}
+			, #{board_writer}
+			, now()
+			, 'N'
+			, 0
+		)
+	</insert>
+	
+	<!-- 상세 -->
+	<select id="getDetail" resultType="com.js.board.dto.BoardDTO">
+		SELECT
+			BOARD_NUM
+			, BOARD_TITLE
+			, BOARD_CONTENT
+			, BOARD_WRITER
+			, BOARD_DATE
+			, DELETE_STATUS
+			, VIEW_COUNT
+		FROM 
+			BOARD_TABLE
+		WHERE
+			BOARD_NUM = #{board_num}
+	</select>
+	
+	<!-- 조회수 -->
+	<update id="viewCount" parameterType="com.js.board.dto.BoardDTO">
+		UPDATE 
+			BOARD_TABLE 
+		SET 
+			VIEW_COUNT = VIEW_COUNT + 1 
+		WHERE 
+			BOARD_NUM = #{board_num}	
+	</update>
+	
+	<!-- 삭제 -->
+	<update id="deleteDetail" parameterType="int">
+		UPDATE 
+			BOARD_TABLE 
+		SET
+			DELETE_STATUS = 'Y' 
+		WHERE 
+			BOARD_NUM = #{board_num}
+	</update>
+
+	<!-- 수정 -->
+	<update id="userEdit" parameterType="com.js.board.dto.BoardDTO">
+		UPDATE 
+			BOARD_TABLE
+		SET 
+			BOARD_TITLE = #{board_title}
+			, BOARD_CONTENT = #{board_content}
+			, BOARD_DATE = NOW() 
+		WHERE 
+			BOARD_NUM = #{board_num}
+	</update>
+</mapper>

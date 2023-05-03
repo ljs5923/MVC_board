@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.js.board.mapper.MainMapper">
+	
+	<!-- 조회순 목록 -->
+	<select id="viewCountListDesc" parameterType="com.js.board.dto.BoardDTO" resultType="com.js.board.dto.BoardDTO">
+		SELECT
+			BOARD_NUM
+			, BOARD_TITLE
+			, BOARD_CONTENT
+			, BOARD_WRITER
+			, BOARD_DATE
+			, DELETE_STATUS
+			, VIEW_COUNT
+		FROM
+			BOARD_TABLE
+		ORDER BY
+			VIEW_COUNT DESC
+		LIMIT 0, 5
+	</select>
+	
+	<!-- 댓글순 목록 -->
+	<select id="commentCountListDesc" parameterType="com.js.board.dto.BoardDTO" resultType="com.js.board.dto.BoardDTO">
+		SELECT
+			BT.BOARD_NUM 
+			, BOARD_TITLE
+			, BOARD_CONTENT
+			, BOARD_WRITER
+			, BOARD_DATE
+			, DELETE_STATUS
+			, VIEW_COUNT
+		FROM
+			BOARD_TABLE BT
+		INNER JOIN
+			(
+				SELECT
+					BOARD_NUM
+					, COUNT(BOARD_NUM) CNT
+				FROM
+					COMMENT_TABLE
+				GROUP BY
+					BOARD_NUM
+				ORDER BY
+					CNT DESC
+			) CT
+		ON
+			BT.BOARD_NUM = CT.BOARD_NUM
+		LIMIT 0, 5
+	</select>
+</mapper>

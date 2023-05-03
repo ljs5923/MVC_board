@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.js.board.mapper.CommentMapper">
+	<!-- 댓글목록 -->
+	<select id="getCommentList" resultType="com.js.board.dto.CommentDTO"
+		parameterType="com.js.board.dto.BoardDTO">
+		SELECT 
+			COMMENT_CONTENT
+			, COMMENT_WRITER
+			, COMMENT_DATE
+			, BOARD_NUM
+			, DELETE_STATUS
+		FROM 
+			COMMENT_TABLE 
+		WHERE
+			DELETE_STATUS = 'N'
+		AND 
+			BOARD_NUM = #{board_num}	
+	</select>
+
+	<!-- 댓글 등록 -->
+	<insert id="registerComment"
+		parameterType="com.js.board.dto.CommentDTO">		
+		INSERT INTO COMMENT_TABLE (
+			COMMENT_CONTENT
+			, COMMENT_WRITER
+			, COMMENT_DATE
+			, BOARD_NUM
+			, DELETE_STATUS
+		)
+		VALUES (
+			#{comment_content}
+			, #{comment_writer}
+			, NOW()
+			, #{board_num}
+			, 'N'
+		)
+	</insert>
+</mapper>
