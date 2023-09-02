@@ -7,7 +7,7 @@
 	<nav id="navigation" class="header">
 		<ul>
 			<li>
-				<form action="/" method="post">
+				<form action="/home" method="post">
 					<button type="submit">메인</button>
 				</form>
 			</li>

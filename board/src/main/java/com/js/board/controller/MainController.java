@@ -16,7 +16,7 @@ public class MainController {
 	@Autowired
 	private MainService mainService;
 	
-	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "/home", method = {RequestMethod.GET, RequestMethod.POST})
 	public String main(Model model, BoardDTO boardDTO) throws Exception {
 		List<BoardDTO> rankingList = mainService.viewCountListDesc(boardDTO);
 		List<BoardDTO> commentRankingList = mainService.commentCountListDesc(boardDTO);

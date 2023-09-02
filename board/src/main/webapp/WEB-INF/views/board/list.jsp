@@ -207,8 +207,8 @@
 					</ul>
 				</div>
 				<div class="btn_wrap right">
-					<form action="/" method="post" class="btn_box">
-						<a href="/">홈</a>
+					<form action="/home" method="post" class="btn_box">
+						<a href="/home">홈</a>
 					</form>
 					<form action="/board/form" method="post" class="btn_box">
 						<button>등록</button>

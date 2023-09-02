@@ -75,6 +75,7 @@ public class BoardDTO extends PagingDTO  {
 	public void setDiff_date(int diff_date) {
 		this.diff_date = diff_date;
 	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
